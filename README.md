@@ -71,3 +71,7 @@ run and requires internet access on your machine the first time you run
 Milestone 2: the actual agents (Code Analysis, Security Vulnerability,
 Remediation, PR Summary) that consume `CodeSubmission` objects, produce
 `Finding` objects, and are grounded in the knowledge base built here.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
