@@ -65,9 +65,3 @@ One environment-specific note: embeddings use `sentence-transformers`
 (`all-MiniLM-L6-v2`), which downloads automatically from Hugging Face on first
 run and requires internet access on your machine the first time you run
 `ingest.py`. After that it's cached locally and works offline.
-
-## Next milestone
-
-Milestone 2: the actual agents (Code Analysis, Security Vulnerability,
-Remediation, PR Summary) that consume `CodeSubmission` objects, produce
-`Finding` objects, and are grounded in the knowledge base built here.
