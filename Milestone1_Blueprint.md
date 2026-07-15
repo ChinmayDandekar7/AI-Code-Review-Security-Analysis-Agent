@@ -5,6 +5,33 @@ This is our working reference for Milestone 1. Everything below maps directly to
 
 ---
 
+## Implementation Status (as built)
+
+This document was written as the initial design plan before any code existed.
+The actual implementation follows it closely, with two refinements made
+during development:
+
+1. **Language selection is fully automatic**, not a manual dropdown as
+   originally sketched in Section 3's `submit_pasted_code` example below.
+   `app/submission/language_detector.py` detects Python vs. Java directly
+   from the code's content (weighted pattern matching, tested against valid
+   *and* syntactically broken snippets of both languages — detection has to
+   work on broken code, since that's exactly when a developer needs
+   validation most). `POST /submission/paste` accepts `language` as an
+   optional override but defaults to auto-detection.
+2. **The knowledge base has 7 source documents**, not the 2 placeholder
+   filenames in Section D's `ingest_document()` calls below. The final set:
+   `owasp_top10.md`, `sql_injection.md`, `hardcoded_secrets.md`,
+   `secure_coding_practices.md`, `python_best_practices.md`,
+   `java_best_practices.md`, `code_quality_principles.md` — 20 chunks total,
+   all original content written for this project.
+
+Everything else below (architecture, data models, folder structure, build
+order) matches what was actually built. A working React + Vite frontend
+was also added on top of this backend plan — see `frontend/README.md`.
+
+---
+
 ## 0. Recommended Tech Stack (near-zero cost)
 
 | Layer | Choice | Why |
@@ -30,37 +57,37 @@ This is our working reference for Milestone 1. Everything below maps directly to
 │                          FRONTEND (React)                       │
 │   Code Submission UI  →  Findings Dashboard  →  Chat Assistant  │
 └───────────────────────────────┬─────────────────────────────────┘
-                                │ REST/WebSocket
-┌───────────────────────────────▼──────────────────────────────────┐
-│                        FASTAPI BACKEND                           │
-│                                                                  │
-│  ┌────────────────────┐        ┌──────────────────────────────┐  │
-│  │ Code Submission    │        │  Orchestrator (LangGraph)    │  │
-│  │ Module             │─────▶ │   runs agents in sequence     │  │  
-│  │ - paste/upload     │        │  parallel per pipeline design│  │
-│  │ - language detect  │        └────┬──────────┬──────────┬───┘  │
-│  │ - syntax validation│             │          │          │      │
-│  └────────────────────┘        ┌────▼────┐ ┌───▼────┐ ┌───▼────┐ │
-│                                │ Code    │ │Security│ │Remedi- │ │
-│                                │ Analysis│ │Vuln    │ │ation   │ │
-│                                │ Agent   │ │Agent   │ │Agent   │ │
-│                                └────┬────┘ └───┬────┘ └───┬────┘ │
-│                                     └───────────┬─────────┘    │ │
-│                                        ┌────────▼──────────┐   │ │
-│                                        │ PR Summary Agent  │◀──┘ │
-│                                        └────┬──────────────┘     │
-│                                             │                    │
-│                              ┌──────────────▼─────────────────┐  │
-│                              │ Conversational Code Assistant  │  │
-│                              │ (RAG: retrieves from Chroma)   │  │
-│                              └──────────────┬─────────────────┘  │
-└─────────────────────────────────────────────┼────────────────────┘
-                                              │
-                                    ┌─────────▼──────────────┐
-                                    │  ChromaDB Vector Store │
-                                    │ (OWASP + secure coding │
-                                    │ docs, chunked+embedded)│
-                                    └────────────────────────┘
+                                 │ REST/WebSocket
+┌───────────────────────────────▼─────────────────────────────────┐
+│                        FASTAPI BACKEND                          │
+│                                                                   │
+│  ┌────────────────────┐        ┌─────────────────────────────┐ │
+│  │ Code Submission      │        │  Orchestrator (LangGraph)    │ │
+│  │ Module               │──────▶│  runs agents in sequence/     │ │
+│  │ - paste/upload        │        │  parallel per pipeline design│ │
+│  │ - language detect     │        └──────┬───────┬───────┬──────┘ │
+│  │ - syntax validation   │               │       │       │        │
+│  └────────────────────┘        ┌────────▼┐ ┌───▼────┐ ┌▼───────┐│
+│                                   │ Code    │ │Security │ │Remedi- ││
+│                                   │ Analysis│ │Vuln     │ │ation   ││
+│                                   │ Agent   │ │Agent    │ │Agent   ││
+│                                   └────┬────┘ └───┬─────┘ └───┬────┘│
+│                                        └────┬──────┘           │    │
+│                                        ┌────▼──────────────┐   │    │
+│                                        │  PR Summary Agent  │◀──┘    │
+│                                        └────┬──────────────┘        │
+│                                             │                        │
+│                              ┌──────────────▼─────────────────┐     │
+│                              │ Conversational Code Assistant   │     │
+│                              │ (RAG: retrieves from Chroma)    │     │
+│                              └──────────────┬───────────────────┘   │
+└─────────────────────────────────────────────┼───────────────────────┘
+                                                │
+                                    ┌───────────▼────────────┐
+                                    │   ChromaDB Vector Store │
+                                    │  (OWASP + secure coding │
+                                    │   docs, chunked+embedded)│
+                                    └──────────────────────────┘
 ```
 
 **Orchestration flow for Milestone 1 (you're only building submission + KB, but design for the full flow now):**
@@ -325,16 +352,23 @@ Save each as a `.md` or `.txt` in `data/raw_docs/` before running `ingest.py`.
 
 ## 4. Milestone 1 Checklist
 
-- [ ] Research notes on OWASP, code smells, RAG (Step A)
-- [ ] Architecture diagram + data models locked in (Step B)
-- [ ] `validate.py` working for both Python and Java, tested with intentionally broken code
-- [ ] `/submission/paste` and `/submission/upload` endpoints returning correct `CodeSubmission` objects
-- [ ] Frontend paste/upload UI wired to backend
-- [ ] At least 3–4 OWASP source documents collected and saved locally
-- [ ] `ingest.py` run successfully, chunks visible in ChromaDB
-- [ ] `retriever.py` returns relevant chunks for a test query (e.g., "how do I prevent SQL injection")
+- [x] Architecture diagram + data models locked in (Step B) — see Sections 1–2
+- [x] `validator.py` working for both Python and Java, tested with intentionally broken code
+- [x] `/submission/paste` and `/submission/upload` endpoints returning correct `CodeSubmission` objects
+- [x] Language auto-detected from code content (Python vs. Java), no manual selection required
+- [x] Frontend paste/upload UI wired to backend, plus a Knowledge Base search view
+- [x] 7 original secure-coding source documents written and saved (see Implementation Status above)
+- [x] `ingest.py` run successfully — 20 chunks visible in ChromaDB
+- [x] `retriever.py` returns relevant chunks for test queries across all 7 documents,
+      exposed over HTTP at `GET /knowledge/search`
+- [ ] Research notes write-up on OWASP, code smells, RAG (Step A) — captured in the
+      knowledge base documents themselves; a standalone notes doc is optional
 
 ---
 
 ## Next Steps
-Once you're ready to start coding, tell me which piece you want to build first — I'd suggest starting with the Code Submission Module since it's self-contained and testable in isolation, then moving to the Knowledge Base. I can write out full working code for each file above, help debug, or extend into Milestone 2's agent logic whenever you're ready.
+
+Milestone 1 is complete. Milestone 2 territory: the actual agents (Code
+Analysis, Security Vulnerability, Remediation, PR Summary) that consume
+`CodeSubmission` objects, produce `Finding` objects, and are grounded in the
+knowledge base built here via the `retrieve()` function.

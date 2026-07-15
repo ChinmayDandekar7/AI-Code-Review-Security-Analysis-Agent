@@ -51,8 +51,11 @@ Everything below was run and observed working, not just written:
 - **Automatic language detection** from pasted code content (no manual dropdown) —
   tested on valid and broken snippets of both languages, live badge updates as you type
 - File upload (`.py`), including the correct filename and language detection
-- Secure coding knowledge base ingestion (2 real OWASP-style source docs → 4 chunks)
-- Knowledge base retrieval, correctly ranking results by topic relevance
+- Secure coding knowledge base ingestion (7 original source docs — OWASP Top 10,
+  SQL injection, hardcoded secrets, general secure coding standards, Python
+  best practices, Java best practices, code quality principles — → 20 chunks)
+- Knowledge base retrieval, correctly ranking results by topic relevance across
+  all 7 documents (tested with 7 different queries spanning every doc)
 - Full frontend ↔ backend integration: paste → submit → results panel updates,
   upload → submit → results panel updates, Knowledge Base tab → search → results render
 - Production build of the frontend (`npm run build`) completes cleanly
@@ -63,3 +66,8 @@ One environment-specific note: embeddings use `sentence-transformers`
 run and requires internet access on your machine the first time you run
 `ingest.py`. After that it's cached locally and works offline.
 
+## Next milestone
+
+Milestone 2: the actual agents (Code Analysis, Security Vulnerability,
+Remediation, PR Summary) that consume `CodeSubmission` objects, produce
+`Finding` objects, and are grounded in the knowledge base built here.
