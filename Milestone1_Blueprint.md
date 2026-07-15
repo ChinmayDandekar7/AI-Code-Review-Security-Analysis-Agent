@@ -365,10 +365,3 @@ Save each as a `.md` or `.txt` in `data/raw_docs/` before running `ingest.py`.
       knowledge base documents themselves; a standalone notes doc is optional
 
 ---
-
-## Next Steps
-
-Milestone 1 is complete. Milestone 2 territory: the actual agents (Code
-Analysis, Security Vulnerability, Remediation, PR Summary) that consume
-`CodeSubmission` objects, produce `Finding` objects, and are grounded in the
-knowledge base built here via the `retrieve()` function.
