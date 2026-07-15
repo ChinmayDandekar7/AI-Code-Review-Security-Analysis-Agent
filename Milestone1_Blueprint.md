@@ -30,37 +30,37 @@ This is our working reference for Milestone 1. Everything below maps directly to
 │                          FRONTEND (React)                       │
 │   Code Submission UI  →  Findings Dashboard  →  Chat Assistant  │
 └───────────────────────────────┬─────────────────────────────────┘
-                                 │ REST/WebSocket
-┌───────────────────────────────▼─────────────────────────────────┐
-│                        FASTAPI BACKEND                          │
-│                                                                   │
-│  ┌────────────────────┐        ┌─────────────────────────────┐ │
-│  │ Code Submission      │        │  Orchestrator (LangGraph)    │ │
-│  │ Module               │──────▶│  runs agents in sequence/     │ │
-│  │ - paste/upload        │        │  parallel per pipeline design│ │
-│  │ - language detect     │        └──────┬───────┬───────┬──────┘ │
-│  │ - syntax validation   │               │       │       │        │
-│  └────────────────────┘        ┌────────▼┐ ┌───▼────┐ ┌▼───────┐│
-│                                   │ Code    │ │Security │ │Remedi- ││
-│                                   │ Analysis│ │Vuln     │ │ation   ││
-│                                   │ Agent   │ │Agent    │ │Agent   ││
-│                                   └────┬────┘ └───┬─────┘ └───┬────┘│
-│                                        └────┬──────┘           │    │
-│                                        ┌────▼──────────────┐   │    │
-│                                        │  PR Summary Agent  │◀──┘    │
-│                                        └────┬──────────────┘        │
-│                                             │                        │
-│                              ┌──────────────▼─────────────────┐     │
-│                              │ Conversational Code Assistant   │     │
-│                              │ (RAG: retrieves from Chroma)    │     │
-│                              └──────────────┬───────────────────┘   │
-└─────────────────────────────────────────────┼───────────────────────┘
-                                                │
-                                    ┌───────────▼────────────┐
-                                    │   ChromaDB Vector Store │
-                                    │  (OWASP + secure coding │
-                                    │   docs, chunked+embedded)│
-                                    └──────────────────────────┘
+                                │ REST/WebSocket
+┌───────────────────────────────▼──────────────────────────────────┐
+│                        FASTAPI BACKEND                           │
+│                                                                  │
+│  ┌────────────────────┐        ┌──────────────────────────────┐  │
+│  │ Code Submission    │        │  Orchestrator (LangGraph)    │  │
+│  │ Module             │─────▶ │   runs agents in sequence     │  │  
+│  │ - paste/upload     │        │  parallel per pipeline design│  │
+│  │ - language detect  │        └────┬──────────┬──────────┬───┘  │
+│  │ - syntax validation│             │          │          │      │
+│  └────────────────────┘        ┌────▼────┐ ┌───▼────┐ ┌───▼────┐ │
+│                                │ Code    │ │Security│ │Remedi- │ │
+│                                │ Analysis│ │Vuln    │ │ation   │ │
+│                                │ Agent   │ │Agent   │ │Agent   │ │
+│                                └────┬────┘ └───┬────┘ └───┬────┘ │
+│                                     └───────────┬─────────┘    │ │
+│                                        ┌────────▼──────────┐   │ │
+│                                        │ PR Summary Agent  │◀──┘ │
+│                                        └────┬──────────────┘     │
+│                                             │                    │
+│                              ┌──────────────▼─────────────────┐  │
+│                              │ Conversational Code Assistant  │  │
+│                              │ (RAG: retrieves from Chroma)   │  │
+│                              └──────────────┬─────────────────┘  │
+└─────────────────────────────────────────────┼────────────────────┘
+                                              │
+                                    ┌─────────▼──────────────┐
+                                    │  ChromaDB Vector Store │
+                                    │ (OWASP + secure coding │
+                                    │ docs, chunked+embedded)│
+                                    └────────────────────────┘
 ```
 
 **Orchestration flow for Milestone 1 (you're only building submission + KB, but design for the full flow now):**
