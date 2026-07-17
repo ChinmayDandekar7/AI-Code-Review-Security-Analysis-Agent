@@ -69,6 +69,4 @@ run and requires internet access on your machine the first time you run
 
 ## License
 
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-
 This project is licensed under the [MIT License](LICENSE)
