@@ -2,7 +2,7 @@
 Shared data models for the AI Code Review & Security Analysis Agent.
 
 Every module (submission, agents, knowledge base) reads/writes these shapes
-so the pipeline stays consistent as we add more pieces in later milestones.
+so the pipeline stays consistent as more pieces are added across milestones.
 """
 
 from pydantic import BaseModel
@@ -57,3 +57,10 @@ class KnowledgeChunk(BaseModel):
     source_doc: str
     text: str
     metadata: dict
+
+
+class AnalysisResult(BaseModel):
+    submission_id: str
+    analyzed_at: datetime
+    findings: list[Finding]
+    summary: dict

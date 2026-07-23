@@ -1,0 +1,45 @@
+.code-editor {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: 320px;
+}
+
+.code-gutter {
+  flex-shrink: 0;
+  width: 44px;
+  padding: 12px 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 21px;
+  color: var(--text-faint);
+  text-align: right;
+  user-select: none;
+}
+
+.gutter-line {
+  padding-right: 10px;
+}
+
+.code-textarea {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 21px;
+  padding: 12px 14px;
+  resize: none;
+  outline: none;
+  tab-size: 4;
+}
+
+.code-textarea::placeholder {
+  color: var(--text-faint);
+}

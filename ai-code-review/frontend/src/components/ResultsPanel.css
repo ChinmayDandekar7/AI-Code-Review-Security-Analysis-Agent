@@ -1,0 +1,133 @@
+.results-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 14px 16px;
+  min-height: 90px;
+}
+
+.results-panel-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-faint);
+  font-size: 13px;
+  min-height: 320px;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.result-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.result-icon-ok {
+  background: rgba(79, 209, 197, 0.15);
+  color: var(--accent);
+}
+
+.result-icon-warn {
+  background: rgba(242, 201, 76, 0.15);
+  color: var(--medium);
+}
+
+.result-icon-error {
+  background: rgba(240, 87, 90, 0.15);
+  color: var(--critical);
+}
+
+.result-message {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.result-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.result-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.result-pill-muted {
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  text-transform: none;
+}
+
+.result-id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-left: auto;
+}
+
+.problem-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.problem-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.problem-marker {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--medium);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.run-analysis-btn {
+  margin-top: 14px;
+  width: 100%;
+  background: var(--accent);
+  color: #0a1614;
+  border: none;
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.run-analysis-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
