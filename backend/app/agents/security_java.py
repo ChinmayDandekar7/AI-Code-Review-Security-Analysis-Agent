@@ -14,7 +14,9 @@ import re
 from .code_analysis_python import RawFinding
 from .security_common import check_hardcoded_secrets
 
-SQL_EXEC_PATTERN = re.compile(r"\.(execute|executeQuery|executeUpdate)\s*\(([^;]*)\)")
+SQL_EXEC_PATTERN = re.compile(
+    r"\.(execute|executeQuery|executeUpdate)\s*\((.*?)\)\s*;", re.DOTALL
+)
 CONCAT_IN_PARENS = re.compile(r"\+")
 STRING_LITERAL_ONLY = re.compile(r'^\s*"[^"]*"\s*$')
 
@@ -49,17 +51,19 @@ def _looks_concatenated(arg_text: str) -> bool:
 
 def check_sql_injection(code: str) -> list[RawFinding]:
     findings = []
-    for i, line in enumerate(code.split("\n"), start=1):
-        match = SQL_EXEC_PATTERN.search(line)
-        if match and _looks_concatenated(match.group(2)):
+    for match in SQL_EXEC_PATTERN.finditer(code):
+        arg_text = match.group(2)
+        if _looks_concatenated(arg_text):
+            line_no = code.count("\n", 0, match.start()) + 1
             findings.append(RawFinding(
                 category="SQL Injection",
                 severity="critical",
-                line_start=i,
-                line_end=i,
-                description=f"Line {i} calls .{match.group(1)}() with a string built "
-                            f"via concatenation rather than a parameterized query. This "
-                            f"allows an attacker to alter the query's logic via crafted input.",
+                line_start=line_no,
+                line_end=line_no,
+                description=f"Line {line_no} calls .{match.group(1)}() with a string built "
+                            f"via concatenation rather than a parameterized query (the call "
+                            f"may span multiple lines). This allows an attacker to alter the "
+                            f"query's logic via crafted input.",
                 remediation="Use PreparedStatement with '?' placeholders and "
                             "setString()/setInt() etc. instead of concatenating values "
                             "directly into the SQL string.",

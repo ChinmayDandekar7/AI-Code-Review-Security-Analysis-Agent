@@ -9,8 +9,8 @@ import re
 from .code_analysis_python import RawFinding
 
 SECRET_PATTERN = re.compile(
-    r"(?i)\b(api[_-]?key|secret[_-]?key|password|passwd|access[_-]?key|"
-    r"auth[_-]?token|private[_-]?key)\b\s*[=:]\s*[\"']([^\"']{8,})[\"']"
+    r"(?i)\b[a-zA-Z_]*(api[_-]?key|secret[_-]?key|password|passwd|access[_-]?key|"
+    r"auth[_-]?token|private[_-]?key)[a-zA-Z0-9_]*\s*[=:]\s*[\"']([^\"']{8,})[\"']"
 )
 PLACEHOLDER_VALUES = {
     "changeme", "your_password_here", "xxxxxxxx", "placeholder", "example",
